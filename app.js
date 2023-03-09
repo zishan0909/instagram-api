@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const instagramGetUrl = require("instagram-url-direct");
 const cors = require('cors');
+require('dotenv').config();
 
 const port = process.env.PORT || 5000;
 
