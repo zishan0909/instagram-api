@@ -33,9 +33,9 @@ app.get("/social/insta", async (req, res) => {
     return;
   }
 
-  const url = `https://api.bhawanigarg.com/social/instagram/?url=${
+  const url = `${
     stringData.split("?")[0]
-  }`;
+  }?__a=1&__d=dis`;
 
   const protocol = url.startsWith("https") ? https : http;
   protocol.get(url, (resp) => {
