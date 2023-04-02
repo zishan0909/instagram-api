@@ -54,7 +54,7 @@ app.get("/social/insta", async (req, res) => {
           arrayList.push(item);
         });
       } else {
-        arrayList.push(response.data.media);
+        arrayList.push(response.data.data.media);
       }
     } else {
       arrayList.push(response.data.img);
