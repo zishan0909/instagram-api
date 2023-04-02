@@ -50,13 +50,11 @@ app.get("/social/insta", async (req, res) => {
     if (stringData.split("/")[4]) {
       if (response.data.data.Type.includes("Carousel")) {
         console.log(response.data.data.media);
-        // arrayList.push();
         response.data.data.media.map((item, indx) => {
           arrayList.push(item);
         });
       } else {
         arrayList.push(response.data.media);
-        // setResultList(arrayList);
       }
     } else {
       arrayList.push(response.data.img);
