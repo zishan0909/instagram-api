@@ -37,12 +37,31 @@ app.get("/social/insta", async (req, res) => {
   };
   try {
     // const url = req.body.url;
+    console.log(stringData.split("/"));
+    console.log(stringData.split("/")[5]);
     const response = await axios.post(
-      "https://dowmate.com/api/allinone/",
+      stringData.split("/")[4]
+        ? "https://dowmate.com/api/allinone/"
+        : "https://dowmate.com/api/instadp/",
       requ
     );
     console.log(response.data);
-    res.send(response.data);
+    const arrayList = [];
+    if (stringData.split("/")[4]) {
+      if (response.data.data.Type.includes("Carousel")) {
+        console.log(response.data.data.media);
+        // arrayList.push();
+        response.data.data.media.map((item, indx) => {
+          arrayList.push(item);
+        });
+      } else {
+        arrayList.push(response.data.media);
+        // setResultList(arrayList);
+      }
+    } else {
+      arrayList.push(response.data.img);
+    }
+    res.send({ url_list: arrayList });
   } catch (err) {
     res.send({ message: err });
   }
