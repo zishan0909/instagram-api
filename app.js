@@ -59,6 +59,7 @@ app.get("/social/insta", async (req, res) => {
     } else {
       arrayList.push(response.data.img);
     }
+    console.log(arrayList);
     res.send({ url_list: arrayList });
   } catch (err) {
     res.send({ message: err });
