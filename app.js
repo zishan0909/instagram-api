@@ -37,6 +37,9 @@ app.get("/social/insta", async (req, res) => {
   };
   try {
     // const url = req.body.url;
+    if (stringData[8] === "i") {
+      stringData.replace("instagram.com", "www.instagram.com");
+    }
     console.log(stringData.split("/"));
     console.log(stringData.split("/")[5]);
     const response = await axios.post(
