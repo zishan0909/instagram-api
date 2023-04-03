@@ -27,7 +27,7 @@ app.post("/media", async (req, res) => {
 });
 
 app.get("/social/insta", async (req, res) => {
-  const stringData = req.query.stringData;
+  let stringData = req.query.stringData;
   if (!stringData) {
     res.status(400).send("stringData parameter is missing");
     return;
@@ -38,7 +38,7 @@ app.get("/social/insta", async (req, res) => {
   try {
     // const url = req.body.url;
     if (stringData[8] === "i") {
-      stringData.replace("instagram.com", "www.instagram.com");
+      stringData = stringData.replace("instagram.com", "www.instagram.com");
     }
     console.log(stringData.split("/"));
     console.log(stringData.split("/")[5]);
