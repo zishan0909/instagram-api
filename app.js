@@ -32,9 +32,12 @@ app.get("/social/insta", async (req, res) => {
     res.status(400).send("stringData parameter is missing");
     return;
   }
-  const apiUrl = `${stringData}?__a=1&__d=dis`;
+  const apiUrl = `${stringData.slice("?")[0]}?__a=1&__d=dis`;
+  console.log("API: " + apiUrl);
+
   try {
     const response = await axios.get(apiUrl);
+    console.log(response);
     const post = response.data.graphql.shortcode_media;
     const urlList = [];
 
@@ -55,6 +58,7 @@ app.get("/social/insta", async (req, res) => {
 
     res.send({ message: "Success", url_list: urlList });
   } catch (err) {
+    console.log(err);
     res.send({ message: err.message, url_list: [] });
   }
 });
