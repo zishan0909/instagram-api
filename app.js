@@ -27,47 +27,80 @@ app.post("/media", async (req, res) => {
 });
 
 app.get("/social/insta", async (req, res) => {
-  let stringData = req.query.stringData;
+  const stringData = req.query.stringData;
   if (!stringData) {
     res.status(400).send("stringData parameter is missing");
     return;
   }
-  const requ = {
-    url: stringData,
-  };
+  const apiUrl = `${stringData}?__a=1&__d=dis`;
   try {
-    // const url = req.body.url;
-    if (stringData[8] === "i") {
-      stringData = stringData.replace("instagram.com", "www.instagram.com");
-    }
-    console.log(stringData.split("/"));
-    console.log(stringData.split("/")[5]);
-    const response = await axios.post(
-      stringData.split("/")[4]
-        ? "https://dowmate.com/api/allinone/"
-        : "https://dowmate.com/api/instadp/",
-      requ
-    );
-    console.log(response.data);
-    const arrayList = [];
-    if (stringData.split("/")[4]) {
-      if (response.data.data.Type.includes("Carousel")) {
-        console.log(response.data.data.media);
-        response.data.data.media.map((item, indx) => {
-          arrayList.push(item);
-        });
-      } else {
-        arrayList.push(response.data.data.media);
-      }
+    const response = await axios.get(apiUrl);
+    const post = response.data.graphql.shortcode_media;
+    const urlList = [];
+
+    if (post.is_video) {
+      urlList.push(post.video_url);
+    } else if (post.edge_sidecar_to_children) {
+      const edges = post.edge_sidecar_to_children.edges;
+      edges.forEach((edge) => {
+        if (edge.node.is_video) {
+          urlList.push(edge.node.video_url);
+        } else {
+          urlList.push(edge.node.display_url);
+        }
+      });
     } else {
-      arrayList.push(response.data.img);
+      urlList.push(post.display_url);
     }
-    console.log(arrayList);
-    res.send({ url_list: arrayList });
+
+    res.send({ message: "Success", url_list: urlList });
   } catch (err) {
-    res.send({ message: err });
+    res.send({ message: err.message, url_list: [] });
   }
 });
+
+// app.get("/social/insta", async (req, res) => {
+//   let stringData = req.query.stringData;
+//   if (!stringData) {
+//     res.status(400).send("stringData parameter is missing");
+//     return;
+//   }
+//   const requ = {
+//     url: stringData,
+//   };
+//   try {
+//     // const url = req.body.url;
+//     if (stringData[8] === "i") {
+//       stringData = stringData.replace("instagram.com", "www.instagram.com");
+//     }
+//     console.log(stringData.split("/"));
+//     console.log(stringData.split("/")[5]);
+//     const response = await axios.post(
+//       stringData.split("/")[4]
+//         ? "https://dowmate.com/api/allinone/"
+//         : "https://dowmate.com/api/instadp/",
+//       requ
+//     );
+//     console.log(response.data);
+//     const arrayList = [];
+//     if (stringData.split("/")[4]) {
+//       if (response.data.data.Type.includes("Carousel")) {
+//         console.log(response.data.data.media);
+//         response.data.data.media.map((item, indx) => {
+//           arrayList.push(item);
+//         });
+//       } else {
+//         arrayList.push(response.data.data.media);
+//       }
+//     } else {
+//       arrayList.push(response.data.img);
+//     }
+//     console.log(arrayList);
+//     res.send({ url_list: arrayList });
+//   } catch (err) {
+//     res.send({ message: err });
+//   }
+// });
 
 app.get("/social/insta/media", async (req, res) => {
   const mediaUrl = req.query.mediaUrl;
