@@ -37,14 +37,13 @@ app.get("/social/insta", async (req, res) => {
 
   try {
     const axiosConfig = {
-      url: apiURL,
       headers: {
         "User-Agent": "PostmanRuntime/7.32.2",
         Cookie:
           "csrftoken=isXlAfB09td1dnXsYc8VQBuRjhicl0VV; ig_did=62B29824-9137-4F24-988E-11DD63E57059; ig_nrcb=1; mid=ZChA2wAEAAH8rXmBOv13EVlz6Hc_",
       },
     };
-    const response = await axios.get(apiUrl);
+    const response = await axios.get(apiUrl, axiosConfig);
     console.log(response);
     const post = response.data.graphql.shortcode_media;
     const urlList = [];
