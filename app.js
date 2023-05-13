@@ -5,6 +5,7 @@ const app = express();
 const instagramGetUrl = require("instagram-url-direct");
 const cors = require("cors");
 const axios = require("axios");
+const { log } = require("console");
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -32,7 +33,7 @@ app.get("/social/insta", async (req, res) => {
     res.status(400).send("stringData parameter is missing");
     return;
   }
-  const apiUrl = `${stringData}?__a=1&__d=dis`;
+  const apiUrl = `${stringData.slice("?")[0]}?__a=1&__d=dis`;
   try {
     const response = await axios.get(apiUrl);
     const post = response.data.graphql.shortcode_media;
@@ -52,6 +53,10 @@ app.get("/social/insta", async (req, res) => {
     } else {
       urlList.push(post.display_url);
     }
+
+    console.log(stringData);
+    console.log(apiUrl);
+    console.log(urlList);
 
     res.send({ message: "Success", url_list: urlList });
   } catch (err) {
