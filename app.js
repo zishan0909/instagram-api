@@ -32,7 +32,7 @@ app.get("/social/insta", async (req, res) => {
     res.status(400).send("stringData parameter is missing");
     return;
   }
-  const apiUrl = `${stringData.slice("?")[0]}?__a=1&__d=dis`;
+  const apiUrl = `${stringData.split("?")[0]}?__a=1&__d=dis`;
   console.log("API: " + apiUrl);
 
   try {
