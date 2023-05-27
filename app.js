@@ -156,13 +156,13 @@ app.get("/social/insta", async (req, res) => {
 
       if (story.video_versions) {
         const url =
-          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-          encodeURIComponent(story.video_versions[0].url);
+          // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+          story.video_versions[0].url;
         res.send({ message: "success", url_list: [url] });
       } else if (story.image_versions2) {
         const url =
-          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-          encodeURIComponent(story.image_versions2.candidates[0].url);
+          // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+          story.image_versions2.candidates[0].url;
         res.send({ message: "success", url_list: [url] });
       } else {
         res.send({ message: "No media found", url_list: [] });
@@ -188,20 +188,20 @@ app.get("/social/insta", async (req, res) => {
         if (response.data.data.Type.includes("Carousel")) {
           response.data.data.media.map((item) => {
             arrayList.push(
-              "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-                encodeURIComponent(item)
+              // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+              item
             );
           });
         } else {
           arrayList.push(
-            "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-              encodeURIComponent(response.data.data.media)
+            // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+            response.data.data.media
           );
         }
       } else {
         arrayList.push(
-          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-            encodeURIComponent(response.data.img)
+          // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+          response.data.img
         );
       }
 
