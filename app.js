@@ -132,6 +132,21 @@ app.post("/media", async (req, res) => {
 //     res.send({ message: err, url_list: [] });
 //   }
 // });
+headers = {
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Encoding": "gzip, deflate, br",
+  "Accept-Language": "en-US,en;q=0.5",
+  Connection: "keep-alive",
+  Host: "instasupersave.com",
+  "Sec-Fetch-Dest": "document",
+  "Sec-Fetch-Mode": "navigate",
+  "Sec-Fetch-Site": "none",
+  "Sec-Fetch-User": "?1",
+  "Upgrade-Insecure-Requests": "1",
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
+};
 
 app.get("/social/insta", async (req, res) => {
   let stringData = req.query.stringData;
@@ -150,7 +165,8 @@ app.get("/social/insta", async (req, res) => {
       const response = await axios.get(
         `https://instasupersave.com/api/ig/story?url=${encodeURIComponent(
           stringData
-        )}`
+        )}`,
+        (headers = headers)
       );
       const story = response.data.result[0];
 
