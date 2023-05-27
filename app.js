@@ -90,46 +90,125 @@ app.post("/media", async (req, res) => {
 //   }
 // });
 
+// app.get("/social/insta", async (req, res) => {
+//   let stringData = req.query.stringData;
+//   if (!stringData) {
+//     res.status(400).send("stringData parameter is missing");
+//     return;
+//   }
+//   const requ = {
+//     url: stringData,
+//   };
+//   try {
+//     // const url = req.body.url;
+//     if (stringData[8] === "i") {
+//       stringData = stringData.replace("instagram.com", "www.instagram.com");
+//     }
+//     console.log(stringData.split("/"));
+//     console.log(stringData.split("/")[5]);
+//     const response = await axios.post(
+//       stringData.split("/")[4]
+//         ? "https://dowmate.com/api/allinone/"
+//         : "https://dowmate.com/api/instadp/",
+//       requ
+//     );
+//     console.log(response.data);
+//     const arrayList = [];
+//     if (stringData.split("/")[4]) {
+//       if (response.data.data.Type.includes("Carousel")) {
+//         console.log(response.data.data.media);
+//         response.data.data.media.map((item, indx) => {
+//           arrayList.push(item);
+//         });
+//       } else {
+//         arrayList.push(response.data.data.media);
+//       }
+//     } else {
+//       arrayList.push(response.data.img);
+//     }
+//     console.log(arrayList);
+//     res.send({ message: "success", url_list: arrayList });
+//   } catch (err) {
+//     res.send({ message: err, url_list: [] });
+//   }
+// });
+
 app.get("/social/insta", async (req, res) => {
   let stringData = req.query.stringData;
   if (!stringData) {
-    res.status(400).send("stringData parameter is missing");
+    res
+      .status(400)
+      .send({ message: "stringData parameter is missing", url_list: [] });
     return;
   }
-  const requ = {
-    url: stringData,
-  };
-  try {
-    // const url = req.body.url;
-    if (stringData[8] === "i") {
-      stringData = stringData.replace("instagram.com", "www.instagram.com");
-    }
-    console.log(stringData.split("/"));
-    console.log(stringData.split("/")[5]);
-    const response = await axios.post(
-      stringData.split("/")[4]
-        ? "https://dowmate.com/api/allinone/"
-        : "https://dowmate.com/api/instadp/",
-      requ
-    );
-    console.log(response.data);
-    const arrayList = [];
-    if (stringData.split("/")[4]) {
-      if (response.data.data.Type.includes("Carousel")) {
-        console.log(response.data.data.media);
-        response.data.data.media.map((item, indx) => {
-          arrayList.push(item);
-        });
+  if (stringData[8] === "i") {
+    stringData = stringData.replace("instagram.com", "www.instagram.com");
+  }
+
+  if (stringData.includes("stories")) {
+    try {
+      const response = await axios.get(
+        `https://instasupersave.com/api/ig/story?url=${encodeURIComponent(
+          stringData
+        )}`
+      );
+      const story = response.data.result[0];
+
+      if (story.video_versions) {
+        const url =
+          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+          encodeURIComponent(story.video_versions[0].url);
+        res.send({ message: "success", url_list: [url] });
+      } else if (story.image_versions2) {
+        const url =
+          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+          encodeURIComponent(story.image_versions2.candidates[0].url);
+        res.send({ message: "success", url_list: [url] });
       } else {
-        arrayList.push(response.data.data.media);
+        res.send({ message: "No media found", url_list: [] });
       }
-    } else {
-      arrayList.push(response.data.img);
+    } catch (err) {
+      res.send({ message: err, url_list: [] });
     }
-    console.log(arrayList);
-    res.send({ message: "success", url_list: arrayList });
-  } catch (err) {
-    res.send({ message: err, url_list: [] });
+  } else {
+    const requ = {
+      url: stringData,
+    };
+
+    try {
+      const response = await axios.post(
+        stringData.split("/")[4]
+          ? "https://dowmate.com/api/allinone/"
+          : "https://dowmate.com/api/instadp/",
+        requ
+      );
+
+      const arrayList = [];
+      if (stringData.split("/")[4]) {
+        if (response.data.data.Type.includes("Carousel")) {
+          response.data.data.media.map((item) => {
+            arrayList.push(
+              "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+                encodeURIComponent(item)
+            );
+          });
+        } else {
+          arrayList.push(
+            "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+              encodeURIComponent(response.data.data.media)
+          );
+        }
+      } else {
+        arrayList.push(
+          "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+            encodeURIComponent(response.data.img)
+        );
+      }
+
+      res.send({ message: "success", url_list: arrayList });
+    } catch (err) {
+      res.send({ message: err, url_list: [] });
+    }
   }
 });
 
