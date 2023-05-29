@@ -163,9 +163,7 @@ app.get("/social/insta", async (req, res) => {
   if (stringData.includes("stories")) {
     try {
       const response = await axios.get(
-        `https://instasupersave.com/api/ig/story?url=${encodeURIComponent(
-          stringData
-        )}`,
+        `https://igram.world/api/ig/story?url=${stringData}`,
         (headers = headers)
       );
       const story = response.data.result[0];
