@@ -4,6 +4,7 @@ const https = require("https");
 const app = express();
 const instagramGetUrl = require("instagram-url-direct");
 const cors = require("cors");
+const CC = require("currency-converter-lt");
 const axios = require("axios");
 require("dotenv").config();
 
@@ -16,6 +17,8 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+let currencyConverter = new CC();
 
 app.post("/media", async (req, res) => {
   try {
@@ -241,6 +244,25 @@ app.get("/social/insta/media", async (req, res) => {
     res.setHeader("Content-Type", contentType);
     resp.pipe(res);
   });
+});
+
+app.get("/calculator/currency", async (req, res) => {
+  const from_code = req.query.from_code;
+  const to_code = req.query.to_code;
+  const amount = req.query.amount;
+  currencyConverter
+    .from(from_code)
+    .to(to_code)
+    .amount(parseFloat(amount))
+    .convert()
+    .then((response) => {
+      console.log(response); //or do something else
+
+      res.send({ success: true, value: response });
+    })
+    .catch((err) => {
+      res.send({ success: false, value: 0 });
+    });
 });
 
 app.listen(port, () => {
