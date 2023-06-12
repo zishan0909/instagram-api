@@ -232,7 +232,7 @@ app.get("/social/insta", async (req, res) => {
     try {
       const response = await axios.post(apiUrl, body);
       const filteredMedia = response.data.medias.filter(
-        (media) => media.quality !== "480p" && media.quality !== "370p"
+        (media) => media.quality === "720p"
       );
       const urlList = filteredMedia.map((media) => media.url);
       const uniqueList = urlList.filter(
