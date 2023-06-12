@@ -235,7 +235,10 @@ app.get("/social/insta", async (req, res) => {
         (media) => media.quality !== "480p" && media.quality !== "370p"
       );
       const urlList = filteredMedia.map((media) => media.url);
-      res.send({ message: "Success", url_list: urlList });
+      const uniqueList = urlList.filter(
+        (value, index, array) => array.indexOf(value) === index
+      );
+      res.send({ message: "Success", url_list: uniqueList });
     } catch (err) {
       res.send({ message: err.message, url_list: [] });
     }
