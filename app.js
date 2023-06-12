@@ -188,43 +188,56 @@ app.get("/social/insta", async (req, res) => {
       res.send({ message: err, url_list: [] });
     }
   } else {
-    const requ = {
-      url: stringData,
-    };
+    // const requ = {
+    //   url: stringData,
+    // };
 
+    // try {
+    //   const response = await axios.post(
+    //     stringData.split("/")[4]
+    //       ? "https://dowmate.com/api/allinone/"
+    //       : "https://dowmate.com/api/instadp/",
+    //     requ
+    //   );
+
+    //   const arrayList = [];
+    //   if (stringData.split("/")[4]) {
+    //     if (response.data.data.Type.includes("Carousel")) {
+    //       response.data.data.media.map((item) => {
+    //         arrayList.push(
+    //           // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+    //           item
+    //         );
+    //       });
+    //     } else {
+    //       arrayList.push(
+    //         // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+    //         response.data.data.media
+    //       );
+    //     }
+    //   } else {
+    //     arrayList.push(
+    //       // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
+    //       response.data.img
+    //     );
+    //   }
+
+    //   res.send({ message: "success", url_list: arrayList });
+    // } catch (err) {
+    //   res.send({ message: err, url_list: [] });
+    // }
+
+    const apiUrl = "https://igram.live/wp-json/igram/video-data/";
+    const body = { url: stringData, token: "" };
     try {
-      const response = await axios.post(
-        stringData.split("/")[4]
-          ? "https://dowmate.com/api/allinone/"
-          : "https://dowmate.com/api/instadp/",
-        requ
+      const response = await axios.post(apiUrl, body);
+      const filteredMedia = response.data.medias.filter(
+        (media) => media.quality !== "480p" && media.quality !== "370p"
       );
-
-      const arrayList = [];
-      if (stringData.split("/")[4]) {
-        if (response.data.data.Type.includes("Carousel")) {
-          response.data.data.media.map((item) => {
-            arrayList.push(
-              // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-              item
-            );
-          });
-        } else {
-          arrayList.push(
-            // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-            response.data.data.media
-          );
-        }
-      } else {
-        arrayList.push(
-          // "https://cute-blue-lizard-gear.cyclic.app/social/insta/media?mediaUrl=" +
-          response.data.img
-        );
-      }
-
-      res.send({ message: "success", url_list: arrayList });
+      const urlList = filteredMedia.map((media) => media.url);
+      res.send({ message: "Success", url_list: urlList });
     } catch (err) {
-      res.send({ message: err, url_list: [] });
+      res.send({ message: err.message, url_list: [] });
     }
   }
 });
